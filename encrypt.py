@@ -210,6 +210,14 @@ def main():
                     print(f"   Q: {Q}")
                     print(f"   S: {S}")
                     print(f"   Claves generadas: {len(key_table) if key_table else 0}")
+                    
+                    #Generando tabla de llaves
+                    print("\n--- TABLA DE LLAVES GENERADA ---")
+                    
+                    for i, key in enumerate(key_table):
+                      print(f"Key[{i}]: {hex(key)}")
+
+                    print("-------------------------------\n")
                     print(f"   Último PSN: {previous_psn}")
                     input("Presiona Enter para continuar...")
                 

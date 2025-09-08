@@ -160,6 +160,12 @@ def main():
                         print(f"-- Tabla de claves generada con FCM")
                         print(f"   P: {P}, S: {S}, Claves: {num_keys}")
                         
+                        print("\n--- TABLA DE LLAVES GENERADA ---")
+                        for i, key in enumerate(key_table):
+                            print(f"Key[{i}]: {hex(key)}")
+
+                        print("-------------------------------\n")
+                        
                         # Enviar confirmación y Q al cliente
                         conn.sendall(pickle.dumps(('FCM_ACK', Q)))
                     
