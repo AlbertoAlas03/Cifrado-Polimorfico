@@ -58,11 +58,12 @@ En este proyecto:
 ### Iniciar el servidor (decrypt.py)
 ```bash
 python decrypt.py
+```
 
-### Iniciar el cliente (encrypt.py)
+#### Iniciar el cliente (encrypt.py)
 ```bash
 python encrypt.py
-
+```
 ---
 
 ### ✅ Ahora ya puedes interactuar desde el cliente con el menú principal con las diferentes opciones disponibles.
