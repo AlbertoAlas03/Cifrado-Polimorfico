@@ -1,5 +1,7 @@
 import socket
 import pickle
+import random
+from sympy import nextprime
 
 # -------------------- FUNCIONES DE GENERACIÓN DE CLAVES --------------------
 
@@ -88,31 +90,33 @@ def get_function_sequence(psn, num_functions=3):
     return sequence
 
 def decrypt_message(encrypted_parts, key_table, psn):
-    """
-    Descifra un mensaje usando la tabla de claves y el PSN.
-    
-    Args:
-        encrypted_parts (list[int]): Lista de bytes cifrados.
-        key_table (list[int]): Tabla de claves generada.
-        psn (int): Número de secuencia polimórfica.
-    
-    Returns:
-        str: Mensaje descifrado en texto plano.
-    """
     decrypted_message = ""
     function_sequence = get_function_sequence(psn)
-    reverse_sequence = list(reversed(function_sequence))  # Orden inverso para descifrar
+    reverse_sequence = list(reversed(function_sequence))
+    
+    #print(f"\n--- DESCIFRANDO CON PSN: {psn}")
     
     for i, encrypted_char in enumerate(encrypted_parts):
-        key = key_table[(i + psn) % len(key_table)]
+        key_index = (i + psn) % len(key_table)
+        key = key_table[key_index]
         decrypted_char = encrypted_char
         
+        #print(f"   Byte cifrado: {encrypted_char} -> Key[{key_index}]: {hex(key)}")
+        
         for func_idx in reverse_sequence:
+            old_val = decrypted_char
             decrypted_char = REVERSE_FUNCTIONS[func_idx](decrypted_char, key)
+            #print(f"     Función inversa {func_idx}: {old_val} -> {decrypted_char}")
         
         decrypted_message += chr(decrypted_char)
+        #print(f"     Carácter descifrado: '{chr(decrypted_char)}'\n")
     
     return decrypted_message
+
+#funcion para generar el numero primo grande (Servidor)
+def generar_primo_Q():
+    numero = random.randint(10000000, 99999999)
+    return nextprime(numero)
 
 # -------------------- PROGRAMA PRINCIPAL --------------------
 
@@ -121,13 +125,13 @@ def main():
     Servidor de descifrado polimórfico.
     Recibe mensajes cifrados del cliente (encrypt.py) y los descifra.
     """
-    Q = 32452843  # Número primo grande (clave fija en el servidor)
+    Q = generar_primo_Q()  # Número primo grande (clave fija en el servidor)
     key_table = None
     current_S = None
     current_P = None
     
     #configuracion de el servidor
-    server_ip = '172.16.0.2'
+    server_ip = 'localhost'
     server_port = 65432
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

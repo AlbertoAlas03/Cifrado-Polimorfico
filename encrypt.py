@@ -1,8 +1,8 @@
-import hashlib
 import socket
 import pickle
-import struct
 import time
+import random
+from sympy import nextprime
 
 # -------------------- FUNCIONES DE GENERACIÓN DE CLAVES --------------------
 
@@ -99,23 +99,25 @@ def get_function_sequence(psn, num_functions=3):
     return sequence
 
 def encrypt_message(message, key_table, psn):
-    """
-    Cifra un mensaje usando la tabla de claves y el PSN.
-    
-    Returns:
-        list[int]: Lista de bytes cifrados.
-    """
     encrypted_parts = []
     function_sequence = get_function_sequence(psn)
     
+    #print(f"\n--- CIFRANDO CON PSN: {psn}")
+    
     for i, char in enumerate(message):
-        key = key_table[(i + psn) % len(key_table)]
+        key_index = (i + psn) % len(key_table)
+        key = key_table[key_index]
         encrypted_char = ord(char)
         
+        #print(f"   Carácter '{char}' (ASCII: {ord(char)}) -> Key[{key_index}]: {hex(key)}")
+        
         for func_idx in function_sequence:
+            old_val = encrypted_char
             encrypted_char = REVERSIBLE_FUNCTIONS[func_idx](encrypted_char, key)
+            #print(f"     Función {func_idx}: {old_val} -> {encrypted_char}")
         
         encrypted_parts.append(encrypted_char)
+        #print(f"     Resultado final: {encrypted_char}\n")
     
     return encrypted_parts
 
@@ -134,6 +136,16 @@ def mostrar_menu():
     print("="*50)
     return input("Selecciona una opción (1-5): ")
 
+#funcion para generar el numero primo grande P (Cliente)
+def generar_primo_P():
+    numero = random.randint(10000000, 99999999)
+    return nextprime(numero)
+
+#funcion para generar la semilla inicial (Cliente)
+def generar_semilla():
+    semilla = random.randint(100000000, 999999999)
+    return semilla
+
 # -------------------- PROGRAMA PRINCIPAL --------------------
 
 def main():
@@ -141,15 +153,15 @@ def main():
     Cliente de cifrado polimórfico.
     Se conecta al servidor, genera claves y permite enviar mensajes cifrados.
     """
-    P = 15485863  # Número primo grande
-    S = 123456789  # Semilla inicial
-    num_keys = 30
+    P = generar_primo_P()  # Número primo grande
+    S = generar_semilla()  # Semilla inicial
+    num_keys = 15
     previous_psn = None
     key_table = None
     Q = None
     
     #configuracion del servidor
-    server_ip = '172.16.0.2'
+    server_ip = 'localhost'
     server_port = 65432
 
     try:
