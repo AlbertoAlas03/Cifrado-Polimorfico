@@ -53,7 +53,7 @@ En este proyecto:
 
 ---
 
-### 🛠️ Funciones principales
+## 🛠️ Funciones principales
 
 1. `scramble_function(x, y)`
 
@@ -119,7 +119,9 @@ return (S + Q) ^ (S * Q)
 
 Si `psn = 5` → `[5 % 3, (5 >> 2) | (...), ...]` → `[2, 1, 0]`
 
-### 🔧 Funciones reversibles
+---
+
+## 🔧 Funciones reversibles
 
 1. `reversible_function_xor(data, key)`
 ```bash
@@ -138,7 +140,9 @@ sbox = [(i + key) % 256 for i in range(256)]
 return sbox[data]
 ```
 
-### 🔓 Funciones de descifrado
+---
+
+## 🔓 Funciones de descifrado
 
 `decrypt_message(encrypted_parts, key_table, psn)`
 
@@ -152,7 +156,9 @@ return sbox[data]
 - Aplica las funciones inversas en orden inverso
 - Convierte a carácter y concatena
 
-### 📨 Tipos de mensajes procesados
+---
+
+## 📨 Tipos de mensajes procesados
 
 1. `FCM`
 - Recibe: `('FCM', P, S, num_keys)`
@@ -170,6 +176,8 @@ return sbox[data]
 4. `LCM`
 - Recibe: `('LCM',)`
 - Limpia estado y cierra conexión
+
+---
 
 ## Ejecución
 
